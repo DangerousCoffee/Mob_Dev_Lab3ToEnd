@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     private lateinit var linearLayoutManager: LinearLayoutManager
 
-    private val AddItemCode = 1
+    private val ADD_ITEM_CODE = 1
     private lateinit var myAdapter: MyAdapter
 
 
@@ -28,6 +28,30 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val navigationListener = navigation.setOnNavigationItemSelectedListener {
+            when(it.itemId) {
+                R.id.action_home -> {
+                    startActivity(Intent(this, MainActivity::class.java))
+
+                    return@setOnNavigationItemSelectedListener true
+                }
+
+                R.id.action_images -> {
+                    startActivity(Intent(this, ImagesActivity::class.java))
+
+                    return@setOnNavigationItemSelectedListener true
+                }
+
+                R.id.action_placeholder -> {
+                    return@setOnNavigationItemSelectedListener false
+                }
+
+                else -> {
+                    return@setOnNavigationItemSelectedListener false
+                }
+            }
+        }
 
 
         linearLayoutManager = LinearLayoutManager(this)
@@ -62,14 +86,14 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     fun fabOnClick() {
         val intent: Intent = Intent(this, AddItemActivity::class.java)
-        startActivityForResult(intent, AddItemCode)
+        startActivityForResult(intent, ADD_ITEM_CODE)
     }
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == AddItemCode && resultCode == Activity.RESULT_OK) {
+        if (requestCode == ADD_ITEM_CODE && resultCode == Activity.RESULT_OK) {
             val movieTitle = data?.getStringExtra(TITLE)
             val movieYear = data?.getStringExtra(YEAR)
             val movieType = data?.getStringExtra(TYPE)

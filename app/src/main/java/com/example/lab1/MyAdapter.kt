@@ -3,7 +3,6 @@ package com.example.lab1
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,7 +36,7 @@ class MyAdapter(val movieCards: ArrayList<MovieCard>, val context: Context):
         val exitButton: Button
 
         init {
-            layout = view.findViewById(R.id.constaintLayout)
+            layout = view.findViewById(R.id.constraintLayout)
             imageView = layout.findViewById(R.id.posterImage)
             titleText = layout.findViewById(R.id.titleText)
             yearText = layout.findViewById(R.id.yearText)

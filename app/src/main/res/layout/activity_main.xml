@@ -29,7 +29,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="start"
-        app2:menu="@menu/bottom_navigation"
         app:itemBackground="@color/cardview_light_background"
         app:itemTextColor="@color/design_default_color_secondary_variant"
         app:labelVisibilityMode="auto"
@@ -53,7 +52,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="true"
             android:paddingTop="8dp"
