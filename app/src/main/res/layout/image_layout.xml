@@ -8,45 +8,52 @@
 
     <ImageView
         android:id="@+id/image1"
-        android:layout_width="240dp"
-        android:layout_height="400dp"
+        android:layout_width="233dp"
+        android:layout_height="200dp"
+        android:adjustViewBounds="false"
+        android:scaleType="fitXY"
         app:layout_constraintEnd_toStartOf="@+id/image2"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/image5"
-        android:layout_width="136.66dp"
-        android:layout_height="103dp"
+        android:layout_width="84dp"
+        android:layout_height="100dp"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toStartOf="@+id/image6"
         app:layout_constraintStart_toEndOf="@+id/image4"
         app:layout_constraintTop_toBottomOf="@+id/image1" />
 
     <ImageView
         android:id="@+id/image6"
-        android:layout_width="136.66dp"
-        android:layout_height="103dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image3" />
+        android:layout_width="83dp"
+        android:layout_height="100dp"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toStartOf="@+id/image3"
+        app:layout_constraintTop_toBottomOf="@+id/image1" />
 
     <ImageView
         android:id="@+id/image4"
-        android:layout_width="136.66dp"
-        android:layout_height="103dp"
+        android:layout_width="84dp"
+        android:layout_height="100dp"
+        android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image1" />
 
     <ImageView
         android:id="@+id/image3"
         android:layout_width="160dp"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
+        android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/image2" />
 
     <ImageView
         android:id="@+id/image2"
         android:layout_width="160dp"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
+        android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

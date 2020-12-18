@@ -9,10 +9,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ImagesActivity"></activity>
-        <activity android:name=".MovieCardDetails" />
-        <activity android:name=".AddItemActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".ImagesActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
+        <activity android:name=".MovieCardDetails"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
+        <activity android:name=".AddItemActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
+        <activity android:name=".MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
