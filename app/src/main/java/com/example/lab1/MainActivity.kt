@@ -39,8 +39,10 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                     return@setOnNavigationItemSelectedListener true
                 }
 
-                R.id.action_placeholder -> {
-                    return@setOnNavigationItemSelectedListener false
+                R.id.action_drawing -> {
+                    startActivity(Intent(this, PieChartActivity::class.java))
+
+                    return@setOnNavigationItemSelectedListener true
                 }
 
                 else -> {

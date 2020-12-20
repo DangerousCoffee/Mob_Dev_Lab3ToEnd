@@ -8,7 +8,7 @@
         android:id="@+id/action_images"
         android:icon="@drawable/ic_add"
         android:title="Images" />
-    <item android:id="@+id/action_placeholder"
-        android:title="Placeholder"
+    <item android:id="@+id/action_drawing"
+        android:title="Drawing"
         android:icon="@drawable/ic_add" />
 </menu>

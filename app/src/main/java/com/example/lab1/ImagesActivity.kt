@@ -35,10 +35,6 @@ class ImagesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_images)
 
 
-
-
-
-
         val navigationListener = navigation.setOnNavigationItemSelectedListener {
             when(it.itemId) {
                 R.id.action_home -> {
@@ -53,8 +49,10 @@ class ImagesActivity : AppCompatActivity() {
                     return@setOnNavigationItemSelectedListener true
                 }
 
-                R.id.action_placeholder -> {
-                    return@setOnNavigationItemSelectedListener false
+                R.id.action_drawing -> {
+                    startActivity(Intent(this, PieChartActivity::class.java))
+
+                    return@setOnNavigationItemSelectedListener true
                 }
 
                 else -> {
