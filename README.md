@@ -18,7 +18,7 @@ Second option is to use table adapter as a database and have it filter out the s
 
 
 ### Assignment 5
--Normal android RecyclerView does not allow some features of CollectionView. It is possible to implement a custom layout manager to create a recycled list with a structure similar to task. However right now it is implemented as a non-recyclable linear series of layout prefabs. As such the app will show noticeable lag when number of images starts getting high enough(50-100 images). It is possible to use staggered layout manager or flexbox library to implement a RecyclerView where each image can have custom width and height. However this solution does not allow to arrange multiple images in a row inside a single column.
+-Normal android RecyclerView does not allow some features of CollectionView. It is possible to implement a custom layout manager to create a recycled list with a structure similar to task. However right now it is implemented as a non-recyclable linear series of layout prefabs. As such the app will show noticeable lag when number of images starts getting high enough(50-100 images). It is possible to use staggered layout manager or flexbox library to implement a RecyclerView where each image can have custom width and height. However this solution does not allow to arrange multiple images in a row inside a single column.  
 -Fixed image resizing. Added function that calculates sizes of all imageViews. The function is called when a prefab is inflated, on orientation change and when inflating the first layout.
 
 ### Assignment 6
