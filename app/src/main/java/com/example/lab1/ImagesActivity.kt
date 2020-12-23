@@ -11,6 +11,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.activity_images.*
@@ -28,6 +29,8 @@ class ImagesActivity : AppCompatActivity() {
     var imageViewPointer = 0
 
     lateinit var myLayoutInflater: LayoutInflater
+
+    val TAG = "IMAGES"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +74,7 @@ class ImagesActivity : AppCompatActivity() {
                 layout.image5,
                 layout.image6
             )
+            this.calculateSizes()
         }
     }
 
@@ -130,11 +134,17 @@ class ImagesActivity : AppCompatActivity() {
             val layout = this.myLayoutInflater.inflate(R.layout.image_layout, null)
             linearLayout.addView(layout)
             this.imageViewArray.addAll(arrayListOf(layout.image1, layout.image2, layout.image3, layout.image4, layout.image5, layout.image6))
+
+            this.calculateSizes()
         }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
+        this.calculateSizes()
+    }
+
+    fun calculateSizes() {
         val image0width = resources.displayMetrics.widthPixels * 2/3
         val image0height = image0width * 3/4
         var layoutParams: ViewGroup.LayoutParams
@@ -162,5 +172,4 @@ class ImagesActivity : AppCompatActivity() {
             localPointer++
         }
     }
-
 }

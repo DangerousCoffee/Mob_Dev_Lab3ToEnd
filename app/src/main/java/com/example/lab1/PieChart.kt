@@ -34,7 +34,7 @@ class PieChart(context: Context, attrs: AttributeSet): View(context, attrs) {
         color = black
     }
 
-    private val oval: RectF = RectF(500F - radius, 500F - radius, 500F + radius, 500F + radius)
+    private val oval: RectF = RectF(550F - radius, 550F - radius, 550F + radius, 550F + radius)
 
 
 
