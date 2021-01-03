@@ -109,7 +109,6 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     }
 
     override fun onQueryTextChange(query: String): Boolean {
-        progressBar.visibility = View.VISIBLE
         CoroutineScope(Dispatchers.Main).launch {
             myAdapter.filter(query)
         }
@@ -117,7 +116,6 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     }
 
     override fun onQueryTextSubmit(query: String): Boolean {
-        progressBar.visibility = View.VISIBLE
         CoroutineScope(Dispatchers.Main).launch {
             myAdapter.filter(query)
         }
