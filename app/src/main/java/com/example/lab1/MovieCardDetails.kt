@@ -1,14 +1,15 @@
 package com.example.lab1
 
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_movie_card_details.*
-import kotlinx.android.synthetic.main.card.*
 import kotlinx.android.synthetic.main.card.titleText
 import kotlinx.android.synthetic.main.card.yearText
+import kotlinx.coroutines.*
+import java.net.HttpURLConnection
 
 class MovieCardDetails : AppCompatActivity() {
 
@@ -18,65 +19,129 @@ class MovieCardDetails : AppCompatActivity() {
 
         val movieCard: MovieCard? = intent.getParcelableExtra(SENTMOVIECARD)
 
-        val filename: String = movieCard?.imdbID!! + ".txt"
+        progressBar.visibility = View.VISIBLE
 
-        try {
-
-            val jsonText: String = applicationContext.assets.open(filename).bufferedReader().use{
-                it.readText()
+        if (movieCard!!.imdbID != null) {
+            if (movieCard!!.imdbID != "") {
+                val url: String = "http://www.omdbapi.com/?apikey=7c12e60b&i=" + movieCard!!.imdbID
+                CoroutineScope(Dispatchers.Default).launch {
+                    val result = GlobalScope.async(Dispatchers.IO) {
+                        val connection = java.net.URL(url).openConnection() as HttpURLConnection
+                        try {
+                            val data = connection.inputStream.bufferedReader().use { it.readText() }
+                            val container = Gson().fromJson<DetailedMovieCard>(
+                                data,
+                                DetailedMovieCard::class.java
+                            )
+                            if (container.Title != null) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    titleText.append(container.Title)
+                                }
+                            }
+                            if (container.Year != null) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    yearText.append(container.Year)
+                                }
+                            }
+                            if (container.Released != null) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    releasedText.append(container.Released)
+                                }
+                            }
+                            if (container.Runtime != null) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    runtimeText.append(container.Runtime)
+                                }
+                            }
+                            if (container.Genre != null) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    genreText.append(container.Genre)
+                                }
+                            }
+                            if (container.Director != null) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    directorText.append(container.Director)
+                                }
+                            }
+                            if (container.Actors != null) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    actorsText.append(container.Actors)
+                                }
+                            }
+                            if (container.Plot != null) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    descriptionText.append(container.Plot)
+                                }
+                            }
+                            if (container.Language != null) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    languageText.append(container.Language)
+                                }
+                            }
+                            if (container.Country != null) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    countryText.append(container.Country)
+                                }
+                            }
+                            if (container.Awards != null) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    awardsText.append(container.Awards)
+                                }
+                            }
+                            if (container.Poster != null) {
+                                if (movieCard.Poster == "") {
+                                    poster.setImageResource(R.drawable.poster_error)
+                                } else {
+                                    GlobalScope.launch {
+                                        getBitmap(movieCard.Poster!!)
+                                    }
+                                }
+                            }
+                            if (container.imdbRating != null) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    ratingText.append(container.imdbRating)
+                                }
+                            }
+                            if (container.Plot != null) {
+                                CoroutineScope(Dispatchers.Main).launch {
+                                    descriptionText.append(container.Plot)
+                                }
+                            }
+                        } finally {
+                            connection.disconnect()
+                        }
+                    }
+                    result.await()
+                    progressBar.visibility = View.INVISIBLE
+                }
+            } else {
+                if (movieCard.Title != null) {
+                    titleText.append(movieCard.Title)
+                }
+                if (movieCard.Year != null) {
+                    yearText.append(movieCard.Year)
+                }
+                if (movieCard.Poster != null) {
+                    poster.setImageResource(R.drawable.poster_error)
+                }
             }
-
-            val detailedMovieCard: DetailedMovieCard =
-                Gson().fromJson<DetailedMovieCard>(jsonText, DetailedMovieCard::class.java)
-
-            when (detailedMovieCard.Poster) {
-                "Poster_01.jpg" -> poster.setImageResource(R.drawable.poster_01)
-                "Poster_02.jpg" -> poster.setImageResource(R.drawable.poster_02)
-                "Poster_03.jpg" -> poster.setImageResource(R.drawable.poster_03)
-                "Poster_05.jpg" -> poster.setImageResource(R.drawable.poster_05)
-                "Poster_06.jpg" -> poster.setImageResource(R.drawable.poster_06)
-                "Poster_07.jpg" -> poster.setImageResource(R.drawable.poster_07)
-                "Poster_08.jpg" -> poster.setImageResource(R.drawable.poster_08)
-                "Poster_10.jpg" -> poster.setImageResource(R.drawable.poster_10)
-                "" -> poster.setImageResource(R.drawable.poster_error)
-            }
-
-            titleText.append(detailedMovieCard.Title)
-            yearText.append(detailedMovieCard.Year)
-            genreText.append(detailedMovieCard.Genre)
-            directorText.append(detailedMovieCard.Director)
-            actorsText.append(detailedMovieCard.Actors)
-            countryText.append(detailedMovieCard.Country)
-            languageText.append(detailedMovieCard.Language)
-            productionText.append(detailedMovieCard.Production)
-            releasedText.append(detailedMovieCard.Released)
-            runtimeText.append(detailedMovieCard.Runtime)
-            awardsText.append(detailedMovieCard.Awards)
-            ratingText.append(detailedMovieCard.imdbRating)
-            descriptionText.append(detailedMovieCard.Plot)
-
-        } catch (e: java.io.FileNotFoundException) {
-
-            when (movieCard.Poster) {
-                "Poster_01.jpg" -> poster.setImageResource(R.drawable.poster_01)
-                "Poster_02.jpg" -> poster.setImageResource(R.drawable.poster_02)
-                "Poster_03.jpg" -> poster.setImageResource(R.drawable.poster_03)
-                "Poster_05.jpg" -> poster.setImageResource(R.drawable.poster_05)
-                "Poster_06.jpg" -> poster.setImageResource(R.drawable.poster_06)
-                "Poster_07.jpg" -> poster.setImageResource(R.drawable.poster_07)
-                "Poster_08.jpg" -> poster.setImageResource(R.drawable.poster_08)
-                "Poster_10.jpg" -> poster.setImageResource(R.drawable.poster_10)
-                "" -> poster.setImageResource(R.drawable.poster_error)
-            }
-
-            titleText.append(movieCard.Title)
-            yearText.append(movieCard.Year)
-
-        } finally {
-
-            actionBar?.setDisplayHomeAsUpEnabled(true)
-
         }
+        actionBar?.setDisplayHomeAsUpEnabled(true)
+    }
 
+
+    suspend fun getBitmap(url: String) {
+        GlobalScope.async(Dispatchers.IO) {
+            val connection = java.net.URL(url).openConnection() as HttpURLConnection
+            try {
+                val data = connection.inputStream
+                val bitmap = BitmapFactory.decodeStream(data)
+                CoroutineScope(Dispatchers.Main).launch {
+                    poster.setImageBitmap(bitmap)
+                }
+            } finally {
+                connection.disconnect()
+            }
+        }
     }
 }

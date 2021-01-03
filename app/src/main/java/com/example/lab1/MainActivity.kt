@@ -5,12 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
@@ -20,10 +21,11 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     private lateinit var myAdapter: MyAdapter
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        progressBar.visibility = View.INVISIBLE
 
         val navigationListener = navigation.setOnNavigationItemSelectedListener {
             when(it.itemId) {
@@ -65,16 +67,8 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         )
 
 
-        val jsonText: String = applicationContext.assets.open("MoviesList.txt").bufferedReader().use{
-            it.readText()
-        }
-        
-        val movieCardArray: ContainerClass = Gson().fromJson<ContainerClass>(jsonText, ContainerClass::class.java)
-
-        myAdapter = MyAdapter(movieCardArray.Search, applicationContext)
+        myAdapter = MyAdapter(ArrayList<MovieCard>(), applicationContext, progressBar)
         recyclerView.adapter = myAdapter
-
-
 
         floatingActionButton.setOnClickListener {
             fabOnClick()
@@ -115,12 +109,18 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     }
 
     override fun onQueryTextChange(query: String): Boolean {
-        myAdapter.filter(query)
+        progressBar.visibility = View.VISIBLE
+        CoroutineScope(Dispatchers.Main).launch {
+            myAdapter.filter(query)
+        }
         return true
     }
 
     override fun onQueryTextSubmit(query: String): Boolean {
-        myAdapter.filter(query)
+        progressBar.visibility = View.VISIBLE
+        CoroutineScope(Dispatchers.Main).launch {
+            myAdapter.filter(query)
+        }
         return true
     }
 

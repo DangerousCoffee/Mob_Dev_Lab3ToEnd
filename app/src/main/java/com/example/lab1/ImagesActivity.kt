@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -11,13 +12,18 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
+import android.text.Layout
 import android.view.*
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import kotlinx.android.synthetic.main.activity_images.*
 import kotlinx.android.synthetic.main.activity_main.navigation
 import kotlinx.android.synthetic.main.image_layout.view.*
+import kotlinx.coroutines.*
+import org.json.JSONObject
 import java.lang.Exception
+import java.net.HttpURLConnection
 
 class ImagesActivity : AppCompatActivity() {
     val ADD_IMAGE_CODE: Int = 1
@@ -30,12 +36,56 @@ class ImagesActivity : AppCompatActivity() {
 
     lateinit var myLayoutInflater: LayoutInflater
 
-    val TAG = "IMAGES"
+    val context = this
 
+    val TAG = "IMAGES"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_images)
+
+
+        if (savedInstanceState == null) {
+            myLayoutInflater = LayoutInflater.from(applicationContext)
+        }
+
+        for (i in 0 until 3) {
+            val layout: View = myLayoutInflater.inflate(R.layout.image_layout, linearLayout, false)
+            linearLayout.addView(layout)
+            this.imageViewArray.addAll(
+                arrayListOf(
+                    layout.image1,
+                    layout.image2,
+                    layout.image3,
+                    layout.image4,
+                    layout.image5,
+                    layout.image6
+                )
+            )
+        }
+        this.calculateSizes()
+
+        val url = "https://pixabay.com/api/?key=19193969-87191e5db266905fe8936d565&q=small+animals&image_type=photo&per_page=18"
+        val imageURLArray = ArrayList<String>()
+        GlobalScope.async(Dispatchers.IO) {
+            val connection = java.net.URL(url).openConnection() as HttpURLConnection
+            try {
+                val data = connection.inputStream.bufferedReader().use { it.readText() }
+                val json = JSONObject(data)
+                val imagesArray = json.getJSONArray("hits")
+                for (index in 0 until imagesArray.length()) {
+                    val imageData = JSONObject(imagesArray.get(index).toString())
+                    imageURLArray.add(imageData.getString("webformatURL"))
+                }
+                CoroutineScope(Dispatchers.Main).async {
+                    for (index in 0 until imageURLArray.size) {
+                        getBitmap(imageURLArray.get(index), imageViewArray.get(index))
+                    }
+                }
+            } finally {
+                connection.disconnect()
+            }
+        }
 
 
         val navigationListener = navigation.setOnNavigationItemSelectedListener {
@@ -62,19 +112,6 @@ class ImagesActivity : AppCompatActivity() {
                     return@setOnNavigationItemSelectedListener false
                 }
             }
-        }
-        if (savedInstanceState == null) {
-            myLayoutInflater = LayoutInflater.from(applicationContext)
-            val layout: View = myLayoutInflater.inflate(R.layout.image_layout, linearLayout, true)
-            this.imageViewArray = arrayListOf(
-                layout.image1,
-                layout.image2,
-                layout.image3,
-                layout.image4,
-                layout.image5,
-                layout.image6
-            )
-            this.calculateSizes()
         }
     }
 
@@ -122,8 +159,6 @@ class ImagesActivity : AppCompatActivity() {
         }
     }
 
-
-
     fun addImage() {
         this.imageViewArray[imageViewPointer].setImageDrawable(this.imagesArray[imagePointer])
 
@@ -170,6 +205,23 @@ class ImagesActivity : AppCompatActivity() {
             }
             image.layoutParams = layoutParams
             localPointer++
+        }
+    }
+
+    suspend fun getBitmap(url: String, imageView: ImageView) {
+        GlobalScope.async(Dispatchers.IO) {
+            val connection = java.net.URL(url).openConnection() as HttpURLConnection
+            try {
+                val data = connection.inputStream
+                val bitmap = BitmapFactory.decodeStream(data)
+                CoroutineScope(Dispatchers.Main).launch {
+                    progressBar.visibility = View.VISIBLE
+                    imageView.setImageBitmap(bitmap)
+                    progressBar.visibility = View.INVISIBLE
+                }
+            } finally {
+                connection.disconnect()
+            }
         }
     }
 }
