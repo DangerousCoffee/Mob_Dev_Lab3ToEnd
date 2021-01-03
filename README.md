@@ -23,3 +23,7 @@ Second option is to use table adapter as a database and have it filter out the s
 
 ### Assignment 6
 -For graph an external library was used since normal libraries don't support drawing graphs via data sets.
+  
+### Assignment 7  
+-Most problems with kotlin coroutines and coroutine scopes.  
+-In images activity the loading indicator is set up to disappear once the image bitmap is loaded and applied. Idk why the actual image may appear a second later.
